@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Today's Calories</h5>
+                        <p class="card-text display-4">{{ todays_calories }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card bg-info text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Target Calories</h5>
+                        <p class="card-text display-4">{{ target_calories }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">This Week's Total Calories</h5>
+                        <p class="card-text display-4">{{ week_total_calories }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">This Week's Calories</h5>
+                        <canvas id="caloriesChart"></canvas>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Macronutrient Distribution</h5>
+                        <canvas id="macronutrientChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Food Distribution</h5>
+                        <canvas id="foodChart"></canvas>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Daily Calorie Deficit/Surplus</h5>
+                        <canvas id="deficitSurplusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">This Week's Food Items</h5>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>Quantity (g)</th>
+                                    <th>Calories</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in week_entries %}
+                                    <tr>
+                                        <td>{{ entry.food_item.name }}</td>
+                                        <td>{{ entry.quantity }}</td>
+                                        <td>{{ entry.calories }}</td>
+                                        <td>{{ entry.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extrajs %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx1 = document.getElementById('caloriesChart').getContext('2d');
+            var caloriesChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: {{ week_labels|safe }},
+                    datasets: [{
+                        label: 'Calories',
+                        data: {{ week_calories|safe }},
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var ctx2 = document.getElementById('foodChart').getContext('2d');
+            var foodChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ food_labels|safe }},
+                    datasets: [{
+                        data: {{ food_data|safe }},
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            var ctx3 = document.getElementById('macronutrientChart').getContext('2d');
+            var macronutrientChart = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Carbohydrates', 'Proteins', 'Fats'],
+                    datasets: [{
+                        data: {{ macronutrient_data|safe }},
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            var ctx4 = document.getElementById('deficitSurplusChart').getContext('2d');
+            var deficitSurplusChart = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: {{ week_labels|safe }},
+                    datasets: [{
+                        label: 'Calorie Deficit/Surplus',
+                        data: {{ deficit_surplus_data|safe }},
+                        backgroundColor: function(context) {
+                            var index = context.dataIndex;
+                            var value = context.dataset.data[index];
+                            return value < 0 ? 'rgba(255, 99, 132, 0.8)' : 'rgba(75, 192, 192, 0.8)';
+                        },
+                        borderColor: function(context) {
+                            var index = context.dataIndex;
+                            var value = context.dataset.data[index];
+                            return value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(75, 192, 192, 1)';
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
