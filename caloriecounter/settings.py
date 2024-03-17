@@ -74,14 +74,20 @@ WSGI_APPLICATION = 'caloriecounter.wsgi.application'
 #     }
 # }
 
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'caloriecounter',
-        'USER': 'postgres',
-        'PASSWORD': 'Loogie3014@',
-        'HOST': '52.54.98.87',
-        'PORT': '5432',  # Default PostgreSQL port
+        'NAME': os.getenv('DB_NAME', 'caloriecounter'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),  # Default PostgreSQL port
     }
 }
 
