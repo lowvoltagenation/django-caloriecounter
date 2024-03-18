@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
+
+{% block title %}
+    Calorie Counter{% if user.username %} | {{ user.username }}{% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="container mt-4">
         {% if user.is_authenticated %}
