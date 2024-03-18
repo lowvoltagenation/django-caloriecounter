@@ -53,6 +53,7 @@ def get_user_data(user):
         'macronutrient_data': macronutrient_data,
         'deficit_surplus_data': deficit_surplus_data,
         'past_7_days_goal_remaining': past_7_days_goal_remaining,
+        'today': today,
     }
 
 
