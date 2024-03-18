@@ -13,12 +13,11 @@ def get_user_data(user):
     todays_entries = CalorieEntry.objects.filter(user=user, date=today)
     todays_calories = todays_entries.aggregate(total_calories=Sum(F('quantity') * F('food_item__calories'), output_field=FloatField()))['total_calories'] or 0
 
-    week_start = today - timedelta(days=today.weekday())
-    week_end = week_start + timedelta(days=6)
-    week_entries = CalorieEntry.objects.filter(user=user, date__range=[week_start, week_end])
-    week_data = week_entries.values('date').annotate(total_calories=Sum(F('quantity') * F('food_item__calories'), output_field=FloatField())).order_by('date')
-    week_labels = [entry['date'].strftime('%a') for entry in week_data]
-    week_calories = [entry['total_calories'] or 0 for entry in week_data]
+    past_7_days_start = today - timedelta(days=6)
+    past_7_days_entries = CalorieEntry.objects.filter(user=user, date__range=[past_7_days_start, today])
+    past_7_days_data = past_7_days_entries.values('date').annotate(total_calories=Sum(F('quantity') * F('food_item__calories'), output_field=FloatField())).order_by('date')
+    past_7_days_labels = [entry['date'].strftime('%a') for entry in past_7_days_data]
+    past_7_days_calories = [entry['total_calories'] or 0 for entry in past_7_days_data]
 
     food_items = FoodItem.objects.filter(calorieentry__user=user).annotate(total_calories=Sum(F('calorieentry__quantity') * F('calories'), output_field=FloatField())).order_by('-total_calories')
     food_labels = [item.name for item in food_items]
@@ -30,30 +29,30 @@ def get_user_data(user):
     except UserTarget.DoesNotExist:
         target_calories = 2300
 
-    week_total_calories = sum(week_calories)
-    week_entries = week_entries.select_related('food_item')
+    past_7_days_total_calories = sum(past_7_days_calories)
+    past_7_days_entries = past_7_days_entries.select_related('food_item')
     macronutrient_data = [
-        week_entries.aggregate(total_carbohydrates=Sum(F('quantity') * F('food_item__carbohydrates'), output_field=FloatField()))['total_carbohydrates'] or 0,
-        week_entries.aggregate(total_protein=Sum(F('quantity') * F('food_item__protein'), output_field=FloatField()))['total_protein'] or 0,
-        week_entries.aggregate(total_fat=Sum(F('quantity') * F('food_item__fat'), output_field=FloatField()))['total_fat'] or 0
+        past_7_days_entries.aggregate(total_carbohydrates=Sum(F('quantity') * F('food_item__carbohydrates'), output_field=FloatField()))['total_carbohydrates'] or 0,
+        past_7_days_entries.aggregate(total_protein=Sum(F('quantity') * F('food_item__protein'), output_field=FloatField()))['total_protein'] or 0,
+        past_7_days_entries.aggregate(total_fat=Sum(F('quantity') * F('food_item__fat'), output_field=FloatField()))['total_fat'] or 0
     ]
 
-    deficit_surplus_data = [calories - target_calories for calories in week_calories]
-    weekly_goal = target_calories * 7
-    weekly_goal_remaining = max(0, weekly_goal - week_total_calories)
+    deficit_surplus_data = [calories - target_calories for calories in past_7_days_calories]
+    past_7_days_goal = target_calories * 7
+    past_7_days_goal_remaining = max(0, past_7_days_goal - past_7_days_total_calories)
 
     return {
         'todays_calories': todays_calories,
         'target_calories': target_calories,
-        'week_total_calories': week_total_calories,
-        'week_labels': week_labels,
-        'week_calories': week_calories,
+        'past_7_days_total_calories': past_7_days_total_calories,
+        'past_7_days_labels': past_7_days_labels,
+        'past_7_days_calories': past_7_days_calories,
         'food_labels': food_labels,
         'food_data': food_data,
-        'week_entries': week_entries,
+        'past_7_days_entries': past_7_days_entries,
         'macronutrient_data': macronutrient_data,
         'deficit_surplus_data': deficit_surplus_data,
-        'weekly_goal_remaining': weekly_goal_remaining,
+        'past_7_days_goal_remaining': past_7_days_goal_remaining,
     }
 
 

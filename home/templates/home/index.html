@@ -3,7 +3,6 @@
 {% block content %}
     <div class="container mt-4">
         {% if user.is_authenticated %}
-
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card shadow">
@@ -67,8 +66,8 @@
             <div class="col-lg-4 col-md-12">
                 <div class="card bg-warning text-white shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">This Week's Total Calories</h5>
-                        <p class="card-text display-4">{{ week_total_calories|floatformat:0 }}</p>
+                        <h5 class="card-title">Past 7 Days Total Calories</h5>
+                        <p class="card-text display-4">{{ past_7_days_total_calories|floatformat:0 }}</p>
                     </div>
                 </div>
             </div>
@@ -78,7 +77,7 @@
             <div class="col-lg-6 col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">This Week's Calories</h5>
+                        <h5 class="card-title">Past 7 Days Calories</h5>
                         <canvas id="caloriesChart"></canvas>
                     </div>
                 </div>
@@ -109,7 +108,7 @@
             <div class="col-12">
                 <div class="card shadow">
                     <div class="card-body">
-                        <h5 class="card-title">This Week's Food Items</h5>
+                        <h5 class="card-title">Past 7 Days Food Items</h5>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -120,7 +119,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for entry in week_entries %}
+                                {% for entry in past_7_days_entries %}
                                     <tr>
                                         <td>{{ entry.food_item.name }}</td>
                                         <td>{{ entry.quantity }}</td>
@@ -146,10 +145,10 @@
             var caloriesChart = new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: {{ week_labels|safe }},
+                    labels: {{ past_7_days_labels|safe }},
                     datasets: [{
                         label: 'Calories',
-                        data: {{ week_calories|safe }},
+                        data: {{ past_7_days_calories|safe }},
                         backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -240,7 +239,7 @@
             var deficitSurplusChart = new Chart(ctx4, {
                 type: 'bar',
                 data: {
-                    labels: {{ week_labels|safe }},
+                    labels: {{ past_7_days_labels|safe }},
                     datasets: [{
                         label: 'Calorie Deficit/Surplus',
                         data: {{ deficit_surplus_data|safe }},
