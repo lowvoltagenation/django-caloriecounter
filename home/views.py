@@ -1,6 +1,6 @@
 #home/views.py
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Sum, F, FloatField
 from django.utils import timezone
 from datetime import timedelta
@@ -61,7 +61,26 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 @staff_member_required
 def index(request):
+    if request.method == 'POST':
+        food_item_id = request.POST.get('food_item')
+        quantity = request.POST.get('quantity')
+        date = request.POST.get('date')
+
+        food_item = get_object_or_404(FoodItem, id=food_item_id)
+        user = request.user
+
+        calorie_entry = CalorieEntry(user=user, food_item=food_item, quantity=quantity, date=date)
+        calorie_entry.save()
+
+        return redirect('index')
+
+    food_items = FoodItem.objects.all()
+    today = timezone.now().date()
+
     context = get_user_data(request.user)
+    context['food_items'] = food_items
+    context['today'] = today
+
     return render(request, 'home/index.html', context)
 
 

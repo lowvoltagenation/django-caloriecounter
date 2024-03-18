@@ -2,7 +2,51 @@
 {% load custom_filters %}
 {% block content %}
     <div class="container mt-4">
+        {% if user.is_authenticated %}
 
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">Add Calorie Entry</h5>
+                        <form method="POST" action="{% url 'index' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="food_item">Food Item</label>
+                                        <select class="form-control" id="food_item" name="food_item">
+                                            {% for food in food_items %}
+                                                <option value="{{ food.id }}">{{ food.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity (g)</label>
+                                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date">Date</label>
+                                        <input type="date" class="form-control" id="date" name="date" value="{{ today }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <button type="submit" class="btn btn-primary btn-block">Add Entry</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg-4 col-md-12">
                 <div class="card bg-success text-white shadow mb-4">
