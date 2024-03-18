@@ -11,7 +11,7 @@
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="{% block og_title %}Calorie Counter{% endblock %}">
     <meta property="og:description" content="Track your daily calorie intake and maintain a healthy lifestyle.">
-    <meta property="og:image" content="{% static 'og.png' %}">
+    <meta property="og:image" content="{% static 'images/og.png' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
     
@@ -19,7 +19,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}Calorie Counter{% endblock %}">
     <meta name="twitter:description" content="Track your daily calorie intake and maintain a healthy lifestyle.">
-    <meta name="twitter:image" content="{% static 'og.png' %}">
+    <meta name="twitter:image" content="{% static 'images/og.png' %}">
     {% block extracss %}{% endblock %}
 </head>
 <body style="background-color: #f5f5f5;">
