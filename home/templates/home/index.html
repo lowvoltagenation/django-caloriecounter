@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block content %}
     <div class="container mt-4">
 
         <div class="row">
             <div class="col-lg-4 col-md-12">
-                <div class="card bg-success text-white mb-4">
+                <div class="card bg-success text-white shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Today's Calories</h5>
-                        <p class="card-text display-4">{{ todays_calories }}</p>
+                        <p class="card-text display-4">{{ todays_calories|floatformat:0 }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-12">
-                <div class="card bg-info text-white mb-4">
+                <div class="card bg-info text-white shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Target Calories</h5>
                         <p class="card-text display-4">{{ target_calories }}</p>
@@ -21,10 +21,10 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-12">
-                <div class="card bg-warning text-white mb-4">
+                <div class="card bg-warning text-white shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">This Week's Total Calories</h5>
-                        <p class="card-text display-4">{{ week_total_calories }}</p>
+                        <p class="card-text display-4">{{ week_total_calories|floatformat:0 }}</p>
                     </div>
                 </div>
             </div>
@@ -32,13 +32,13 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-12">
-                <div class="card mb-4">
+                <div class="card shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">This Week's Calories</h5>
                         <canvas id="caloriesChart"></canvas>
                     </div>
                 </div>
-                <div class="card mb-4">
+                <div class="card shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Macronutrient Distribution</h5>
                         <canvas id="macronutrientChart"></canvas>
@@ -46,13 +46,13 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-12">
-                <div class="card mb-4">
+                <div class="card shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Food Distribution</h5>
                         <canvas id="foodChart"></canvas>
                     </div>
                 </div>
-                <div class="card mb-4">
+                <div class="card shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Daily Calorie Deficit/Surplus</h5>
                         <canvas id="deficitSurplusChart"></canvas>
@@ -63,7 +63,7 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card shadow">
                     <div class="card-body">
                         <h5 class="card-title">This Week's Food Items</h5>
                         <table class="table table-striped">
@@ -80,7 +80,7 @@
                                     <tr>
                                         <td>{{ entry.food_item.name }}</td>
                                         <td>{{ entry.quantity }}</td>
-                                        <td>{{ entry.calories }}</td>
+                                        <td>{{ entry.quantity|mul:entry.food_item.calories }}</td>
                                         <td>{{ entry.date }}</td>
                                     </tr>
                                 {% endfor %}
