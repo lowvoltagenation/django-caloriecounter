@@ -127,7 +127,7 @@
                                     <tr>
                                         <td>{{ entry.food_item.name }}</td>
                                         <td>{{ entry.quantity }}</td>
-                                        <td>{{ entry.quantity|mul:entry.food_item.calories }}</td>
+                                        <td>{{ entry.quantity|mul:entry.food_item.calories|floatformat:0 }}</td>
                                         <td>{{ entry.date }}</td>
                                     </tr>
                                 {% endfor %}

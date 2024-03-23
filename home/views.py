@@ -37,7 +37,7 @@ def get_user_data(user):
         past_7_days_entries.aggregate(total_fat=Sum(F('quantity') * F('food_item__fat'), output_field=FloatField()))['total_fat'] or 0
     ]
 
-    deficit_surplus_data = [calories - target_calories for calories in past_7_days_calories]
+    deficit_surplus_data = [calories - target_calories for calories in past_7_days_calories] 
     past_7_days_goal = target_calories * 7
     past_7_days_goal_remaining = max(0, past_7_days_goal - past_7_days_total_calories)
 
