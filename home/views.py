@@ -41,6 +41,12 @@ def get_user_data(user):
     past_7_days_goal = target_calories * 7
     past_7_days_goal_remaining = max(0, past_7_days_goal - past_7_days_total_calories)
 
+    # Calculate average calories per day for the week
+    past_7_days_entries = CalorieEntry.objects.filter(user=user, date__gte=today - timedelta(days=6))
+    past_7_days_total_calories = sum(entry.quantity * entry.food_item.calories for entry in past_7_days_entries)
+    avg_calories_per_day = round(past_7_days_total_calories / 7)
+
+
     return {
         'todays_calories': todays_calories,
         'target_calories': target_calories,
@@ -54,6 +60,7 @@ def get_user_data(user):
         'deficit_surplus_data': deficit_surplus_data,
         'past_7_days_goal_remaining': past_7_days_goal_remaining,
         'today': today,
+        'avg_calories_per_day': avg_calories_per_day,
     }
 
 

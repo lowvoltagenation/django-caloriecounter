@@ -51,7 +51,7 @@
         </div>
         {% endif %}
         <div class="row">
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card bg-success text-white shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Today's Calories</h5>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card bg-info text-white shadow mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Target Calories</h5>
@@ -67,11 +67,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card bg-warning text-white shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">Past 7 Days Total Calories</h5>
+                        <h5 class="card-title">7 Days Calories</h5>
                         <p class="card-text display-4">{{ past_7_days_total_calories|floatformat:0 }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card bg-secondary text-white shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Avg Calories/Day</h5>
+                        <p class="card-text display-4">{{ avg_calories_per_day }}</p>
                     </div>
                 </div>
             </div>
