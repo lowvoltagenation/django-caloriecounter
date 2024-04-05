@@ -33,3 +33,6 @@ class WeightEntryAdmin(admin.ModelAdmin):
     list_display = ('user', 'weight', 'date')
 
 @admin.register(UserTarget)
+class UserTargetAdmin(admin.ModelAdmin):
+    list_display = ('user', 'target_calories')
+    search_fields = ('user__username',)
