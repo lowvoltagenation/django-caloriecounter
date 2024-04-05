@@ -1,6 +1,6 @@
 #home/admin.py
 from django.contrib import admin
-from .models import FoodItem, CalorieEntry, WeightEntry
+from .models import FoodItem, CalorieEntry, WeightEntry, UserTarget
 from django import forms
 from django.utils import timezone
 
@@ -31,3 +31,5 @@ class CalorieEntryAdmin(admin.ModelAdmin):
 @admin.register(WeightEntry)
 class WeightEntryAdmin(admin.ModelAdmin):
     list_display = ('user', 'weight', 'date')
+
+@admin.register(UserTarget)
