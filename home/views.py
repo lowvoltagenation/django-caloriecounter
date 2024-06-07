@@ -15,10 +15,22 @@ def get_user_data(user):
 
     past_7_days_start = today - timedelta(days=6)
     past_7_days_entries = CalorieEntry.objects.filter(user=user, date__range=[past_7_days_start, today])
-    past_7_days_data = past_7_days_entries.values('date').annotate(total_calories=Sum(F('quantity') * F('food_item__calories'), output_field=FloatField())).order_by('date')
+    past_7_days_data = past_7_days_entries.values('date').annotate(
+        total_calories=Sum(F('quantity') * F('food_item__calories'), output_field=FloatField()),
+        total_carbohydrates=Sum(F('quantity') * F('food_item__carbohydrates'), output_field=FloatField()),
+        total_protein=Sum(F('quantity') * F('food_item__protein'), output_field=FloatField()),
+        total_fat=Sum(F('quantity') * F('food_item__fat'), output_field=FloatField())
+    ).order_by('date')    
     past_7_days_labels = [entry['date'].strftime('%a') for entry in past_7_days_data]
     past_7_days_calories = [entry['total_calories'] or 0 for entry in past_7_days_data]
-
+    past_7_days_macros = [
+    {
+        'carbohydrates': entry['total_carbohydrates'] or 0,
+        'protein': entry['total_protein'] or 0,
+        'fat': entry['total_fat'] or 0
+    }
+    for entry in past_7_days_data
+]
     food_items = FoodItem.objects.filter(calorieentry__user=user).annotate(total_calories=Sum(F('calorieentry__quantity') * F('calories'), output_field=FloatField())).order_by('-total_calories')
     food_labels = [item.name for item in food_items]
     food_data = [item.total_calories or 0 for item in food_items]
@@ -61,6 +73,8 @@ def get_user_data(user):
         'past_7_days_goal_remaining': past_7_days_goal_remaining,
         'today': today,
         'avg_calories_per_day': avg_calories_per_day,
+        'past_7_days_macros': past_7_days_macros,
+
     }
 
 

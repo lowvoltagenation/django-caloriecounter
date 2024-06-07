@@ -171,6 +171,26 @@
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += Math.round(context.parsed.y);
+
+                                    var macros = {{ past_7_days_macros|safe }}[context.dataIndex];
+                                    label += '\nCarbohydrates: ' + Math.round(macros.carbohydrates) + 'g';
+                                    label += '\nProtein: ' + Math.round(macros.protein) + 'g';
+                                    label += '\nFat: ' + Math.round(macros.fat) + 'g';
+
+                                    return label.split('\n');
+                                }
+                            }
+                        }
                     }
                 }
             });
