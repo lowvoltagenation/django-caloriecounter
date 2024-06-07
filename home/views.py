@@ -96,7 +96,7 @@ def index(request):
         return redirect('index')
 
     food_items = FoodItem.objects.all()
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
 
     context = get_user_data(request.user)
     context['food_items'] = food_items
