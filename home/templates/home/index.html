@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <!-- <label for="date">Date</label> -->
+                                        <!-- <label for="date">{{ today }}</label> -->
                                         <input type="date" class="form-control" id="date" name="date" value="{{ today|date:'Y-m-d' }}" required>
                                     </div>
                                 </div>
@@ -128,15 +128,20 @@
                                     <th>Quantity (g)</th>
                                     <th>Calories</th>
                                     <th>Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for entry in past_7_days_entries %}
                                     <tr>
-                                        <td>{{ entry.food_item.name }}</td>
+                                        <td><a href="{% url 'admin:home_fooditem_change' entry.food_item.id %}">{{ entry.food_item.name }}</a></td>
                                         <td>{{ entry.quantity }}</td>
                                         <td>{{ entry.quantity|mul:entry.food_item.calories|floatformat:0 }}</td>
                                         <td>{{ entry.date }}</td>
+                                        <td>
+                                            <a href="{% url 'admin:home_calorieentry_change' entry.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                            <a href="{% url 'admin:home_calorieentry_delete' entry.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
