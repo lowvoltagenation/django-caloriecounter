@@ -18,6 +18,9 @@ class CalorieEntry(models.Model):
     quantity = models.IntegerField()
     date = models.DateField()
 
+    def __str__(self):
+        return f"{self.user.username} - {self.food_item.name} ({self.quantity}g) on {self.date}"
+
 class WeightEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     weight = models.FloatField()
